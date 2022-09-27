@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Go socket编程学习 | ARCZHI&#39;s Blog</title>
+  <meta name="description" content="体验socket编程并尝试调优 简单的客户端和服务端 server发送数据（随机数），client接收  server 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758package mainimport (	&quot;encodi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go socket编程学习">
+<meta property="og:url" content="http://example.com/2022/09/24/golang%20socket%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="体验socket编程并尝试调优 简单的客户端和服务端 server发送数据（随机数），client接收  server 12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758package mainimport (	&quot;encodi">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://touchcloud.top:9000/Blog_imgs/socket_server.jpg">
+<meta property="og:image" content="https://touchcloud.top:9000/Blog_imgs/socket_client.jpg">
+<meta property="og:image" content="https://touchcloud.top:9000/Blog_imgs/socket1.jpg">
+<meta property="og:image" content="https://touchcloud.top:9000/Blog_imgs/socket2.jpg">
+<meta property="og:image" content="https://touchcloud.top:9000/Blog_imgs/socket3.jpg">
+<meta property="og:image" content="https://touchcloud.top:9000/Blog_imgs/socket4.jpg">
+<meta property="og:image" content="https://touchcloud.top:9000/Blog_imgs/socket5.jpg">
+<meta property="article:published_time" content="2022-09-24T02:43:44.800Z">
+<meta property="article:modified_time" content="2022-09-27T08:44:38.425Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="Golang">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://touchcloud.top:9000/Blog_imgs/socket_server.jpg">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://example.com/2022/09/24/golang%20socket%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.css">
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body class="main-center theme-black" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/arczhi" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">ARCZHI</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Student &amp; Coder</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Guangzhou, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">Categories</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/arczhi" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/null" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="/null" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="/null" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/">前后端开发</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/">后端开发</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B5%8B%E8%AF%95%E9%83%A8%E7%BD%B2/">测试部署</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Django/" rel="tag">Django</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Golang/" rel="tag">Golang</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MySQL/" rel="tag">MySQL</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Python/" rel="tag">Python</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Vue2/" rel="tag">Vue2</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Zabbix/" rel="tag">Zabbix</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Django/" style="font-size: 13px;">Django</a> <a href="/tags/Docker/" style="font-size: 13.5px;">Docker</a> <a href="/tags/Golang/" style="font-size: 14px;">Golang</a> <a href="/tags/MySQL/" style="font-size: 13px;">MySQL</a> <a href="/tags/PHP/" style="font-size: 13px;">PHP</a> <a href="/tags/Python/" style="font-size: 13px;">Python</a> <a href="/tags/Redis/" style="font-size: 13.5px;">Redis</a> <a href="/tags/Vue2/" style="font-size: 13px;">Vue2</a> <a href="/tags/Zabbix/" style="font-size: 13px;">Zabbix</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/09/">September 2022</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">August 2022</a><span class="archive-list-count">9</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/">后端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/09/24/golang%20socket%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/" class="title">Go socket编程学习</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-09-24T02:43:44.800Z" itemprop="datePublished">2022-09-24</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/">后端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/09/15/jwt%E5%BA%94%E7%94%A8%E5%AE%9E%E8%B7%B5/" class="title">Go jwt应用实践</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-09-15T00:05:00.570Z" itemprop="datePublished">2022-09-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/">后端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/09/07/Golang%E6%93%8D%E4%BD%9Credis%E7%BC%93%E5%AD%98JSON%E6%95%B0%E6%8D%AE-%E5%AE%9E%E8%B7%B5/" class="title">Golang操作Redis缓存JSON数据的实践</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-09-07T07:54:17.100Z" itemprop="datePublished">2022-09-07</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/">后端开发</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/08/31/go%E5%B9%B6%E5%8F%91%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98_fatal%20error%20concurrent%20map%20writes%20map/" class="title">go goroutine读取字典的并发安全问题[fatal error:concurrent map writes]</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-08-31T08:15:45.878Z" itemprop="datePublished">2022-08-31</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/">网络安全</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/08/18/PHP%E6%89%AB%E6%8F%8F/" class="title">记一条可疑的日志记录</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-08-18T11:54:44.442Z" itemprop="datePublished">2022-08-18</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-golang socket编程学习" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Go socket编程学习
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2022/09/24/golang%20socket%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/" class="article-date">
+	  <time datetime="2022-09-24T02:43:44.800Z" itemprop="datePublished">2022-09-24</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/">后端开发</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/Golang/" rel="tag">Golang</a>
+  </span>
+
+
+        
+	<span class="article-read hidden-xs">
+	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
+	    <span id="busuanzi_container_page_pv">
+			<span id="busuanzi_value_page_pv">0</span>
+		</span>
+	</span>
+
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2022/09/24/golang%20socket%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/#comments" class="article-comment-link">Comments</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h3 id="体验socket编程并尝试调优"><a href="#体验socket编程并尝试调优" class="headerlink" title="体验socket编程并尝试调优"></a>体验socket编程并尝试调优</h3><hr>
+<h4 id="简单的客户端和服务端"><a href="#简单的客户端和服务端" class="headerlink" title="简单的客户端和服务端"></a>简单的客户端和服务端</h4><blockquote>
+<p>server发送数据（随机数），client接收</p>
+</blockquote>
+<p><strong>server</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;encoding/binary&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;math/rand&quot;</span><br><span class="line">	&quot;net&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">var socket = &quot;:9066&quot;</span><br><span class="line">var BufLen = 1024 //缓存（字节数组）长度</span><br><span class="line"></span><br><span class="line">//处理连接</span><br><span class="line">func HandleConnection(conn net.Conn) &#123;</span><br><span class="line">	defer conn.Close()</span><br><span class="line">	rand.Seed(time.Now().UnixNano())</span><br><span class="line">	var startTime = time.Now()</span><br><span class="line">	//进行随机数发送</span><br><span class="line">	for time.Now().Sub(startTime) &lt;= 10*time.Second &#123;</span><br><span class="line">		buf := make([]byte, BufLen) //注意，这里是可变长编码</span><br><span class="line">		binary.PutVarint(buf, rand.Int63())</span><br><span class="line">		conn.Write(buf)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//调整缓存长度</span><br><span class="line">func AjustBufLen() &#123;</span><br><span class="line">	fmt.Printf(&quot;Please change the BufLen: &quot;)</span><br><span class="line">	fmt.Scanln(&amp;BufLen)</span><br><span class="line">	fmt.Printf(&quot;Current []byte Len \t%d\n&quot;, BufLen)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	//创建tcp连接，监听端口</span><br><span class="line">	listen, err := net.Listen(&quot;tcp&quot;, socket)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Printf(&quot;[ERROR] Listen err: %v\n&quot;, err)</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Printf(&quot;[server] Server listening %v\n&quot;, socket)</span><br><span class="line"></span><br><span class="line">	//调整写入缓存的长度</span><br><span class="line">	AjustBufLen()</span><br><span class="line"></span><br><span class="line">	//处理连接</span><br><span class="line">	for &#123;</span><br><span class="line">		con, err := listen.Accept()</span><br><span class="line">		if err != nil &#123;</span><br><span class="line">			fmt.Printf(&quot;[ERROR] Accept err: %v\n&quot;, err)</span><br><span class="line">			continue</span><br><span class="line">		&#125;</span><br><span class="line">		//开启新协程，去处理客户端连接</span><br><span class="line">		go HandleConnection(con)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>client</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;io/ioutil&quot;</span><br><span class="line">	&quot;net&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">var socket = &quot;:9066&quot;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	//与服务端建立连接</span><br><span class="line">	conn, err := net.Dial(&quot;tcp&quot;, socket)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Printf(&quot;[ERROR] Error connection : %v\n&quot;, err)</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">	defer conn.Close() //退出前关闭连接</span><br><span class="line"></span><br><span class="line">	//接收响应,读取数据</span><br><span class="line">	var totalBytes int</span><br><span class="line">	var startTime = time.Now()</span><br><span class="line"></span><br><span class="line">	bytes, err := ioutil.ReadAll(conn)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Printf(&quot;[ERROR] Error reading : %v\n&quot;, err)</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">	totalBytes = len(bytes)</span><br><span class="line"></span><br><span class="line">	cost := time.Now().Sub(startTime).Seconds()</span><br><span class="line"></span><br><span class="line">	fmt.Printf(&quot;[analysis]\nReceived\t%d\t\tbytes  \nEquals\t\t%d\tbits  \nTime Cost\t%v\ts  \nAverage Speed\t%v\t\tMB/s\n &quot;,</span><br><span class="line">		totalBytes, totalBytes*8, cost, fmt.Sprintf(&quot;%.2f&quot;, float64(totalBytes)/1024/1024/cost))</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>效果演示</p>
+</blockquote>
+<p><img src="https://touchcloud.top:9000/Blog_imgs/socket_server.jpg"></p>
+<p><img src="https://touchcloud.top:9000/Blog_imgs/socket_client.jpg"></p>
+<blockquote>
+<p>可以看到速度并不理想</p>
+<p>此时条件:</p>
+<p>server端使用了长度为10的byte切片作为缓存（每次循环要发送的数据大小）;</p>
+<p>client端使用ioutil.ReadAll()对数据全部读取；</p>
+<p>本地回环测试；</p>
+</blockquote>
+<h4 id="问题回顾"><a href="#问题回顾" class="headerlink" title="问题回顾"></a>问题回顾</h4><p><strong>1.varint变长编码</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">buf := make([]byte, 8) </span><br><span class="line">binary.PutVarint(buf, rand.Int63())</span><br><span class="line">conn.Write(buf)</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://touchcloud.top:9000/Blog_imgs/socket1.jpg"></p>
+<blockquote>
+<p>这里使用了一个长度为8的byte切片，尝试向其中写入一个int64的随机数，但是报错了。按道理来说，byte为uint8，占1个字节，int64占8个字节，长度为8的byte切片理应可以存储一个int64的数，为什么会报错呢？</p>
+</blockquote>
+<blockquote>
+<p>仔细观察，发现我所使用的binary的方法为PutVarint（int64转换成[]byte），这个Varint，百度之后，原来是一种变长编码，能够实现很好的编码压缩效果（小数字占用较少字节，大数字占用较多的字节，但小数字出现的频率更高）。</p>
+<p>除了最后一个字节外，varint编码中的每一个字节都有一个最高有效位<em>most significant bit</em> (MSB)，它告诉了我们是否还有更多的字节。若MSB为1，则还有更多的字节；若MSB为0，则到这里为止。一个字节中，除了这个最高有效位，其余7位均采用二进制补码的形式存储，最低有效组在前，或者叫最低有效字节在前（即小端序排列）。</p>
+</blockquote>
+<blockquote>
+<p>这意味着，长度为8的[]byte切片，使用Varint编码，只有 8 * 7 &#x3D; 56 个有效位，无法存储一个64位的int64，至少需要长度为10的byte切片 (10 * 7 &#x3D; 70) 才能存储一个int64的数。   </p>
+</blockquote>
+<p><strong>参考</strong></p>
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://developers.google.cn/protocol-buffers/docs/encoding">Encoding  | Protocol Buffers  | Google Developers</a> protobuf中关于varint有很棒的解释</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/84250836">详解varint编码原理 - 知乎 (zhihu.com)</a> 该帖子也很不错</p>
+</blockquote>
+<p><strong>2.性能调优</strong></p>
+<p><strong>前置条件：</strong></p>
+<blockquote>
+<ol>
+<li>server端每次for循环写入缓冲区的数据是长度为10的[]byte</li>
+<li>server端持续发送数据 10 s</li>
+</ol>
+</blockquote>
+<ul>
+<li><strong>调整服务端写入缓冲区的大小</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//将写入缓冲区的字节数调整为 10</span><br><span class="line">conn.SetWriteBuffer(10)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>若写入缓存小于要发送的数据大小，则write()&#x2F;send()会被阻塞，直到缓存区中的数据被发送到目标机器，腾出足够空间，write()&#x2F;send()才会继续写入数据。</p>
+<p>参考： <a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_39521651/article/details/113075089">(104条消息) golang tcp write阻塞_socket缓冲区以及阻塞模式详解_weixin_39521651的博客-CSDN博客</a></p>
+</blockquote>
+<p><img src="https://touchcloud.top:9000/Blog_imgs/socket2.jpg"></p>
+<blockquote>
+<p>从 0.37MB&#x2F;s 到 0.62MB&#x2F;s，有一定的速度提升。（精确测试应多次测量取平均值）</p>
+</blockquote>
+<ul>
+<li><strong>调整客户端读取缓冲区的大小(保持前述调整)</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//修改读取缓冲区的字节数调整为 1 ，不必等到默认的8字节再开始读取数据</span><br><span class="line">conn.SetReadBuffer(1)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/cfas/p/15099406.html">golang 网络编程 设置读写缓冲区的大小 - 方东信 - 博客园 (cnblogs.com)</a></p>
+</blockquote>
+<p><img src="https://touchcloud.top:9000/Blog_imgs/socket3.jpg"></p>
+<blockquote>
+<p>提升不算明显</p>
+</blockquote>
+<ul>
+<li><strong>提高随机数编码的缓存大小</strong></li>
+</ul>
+<blockquote>
+<p>调整BufLen</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">buf := make([]byte, BufLen) </span><br><span class="line">binary.PutVarint(buf, rand.Int63())</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://touchcloud.top:9000/Blog_imgs/socket4.jpg"></p>
+<p><img src="https://touchcloud.top:9000/Blog_imgs/socket5.jpg"></p>
+<blockquote>
+<p>可以看到，随着缓存的提高，速度也在提高。</p>
+<p>但当缓存增大到一定值后，出现了虚拟内存分配的错误:</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">runtime: VirtualAlloc of 1147486208 bytes failed with errno=1455</span><br><span class="line">fatal error: out of memory</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>解决方案等待补充</p>
+<p>…………</p>
+</blockquote>
+<ul>
+<li>调整后的代码</li>
+</ul>
+<p><strong>server</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;encoding/binary&quot;</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;math/rand&quot;</span><br><span class="line">	&quot;net&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">var socket = &quot;:9066&quot;</span><br><span class="line">var BufLen = 10 //缓存（字节数组）长度</span><br><span class="line"></span><br><span class="line">func HandleConnection(conn *net.TCPConn) &#123;</span><br><span class="line">	//退出前关闭连接</span><br><span class="line">	defer conn.Close()</span><br><span class="line">	//随机数种子</span><br><span class="line">	rand.Seed(time.Now().UnixNano())</span><br><span class="line"></span><br><span class="line">	//将写入缓存的字节数调整为10</span><br><span class="line">	conn.SetWriteBuffer(10)</span><br><span class="line"></span><br><span class="line">	var startTime = time.Now()</span><br><span class="line">	//进行随机数发送</span><br><span class="line">	for time.Now().Sub(startTime) &lt;= 10*time.Second &#123;</span><br><span class="line">		buf := make([]byte, BufLen) </span><br><span class="line">		binary.PutVarint(buf, rand.Int63()) //可变长编码</span><br><span class="line">		conn.Write(buf)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func AjustBufLen() &#123;</span><br><span class="line">	fmt.Printf(&quot;Please change the BufLen: &quot;)</span><br><span class="line">	fmt.Scanln(&amp;BufLen)</span><br><span class="line">	fmt.Printf(&quot;Current []byte Len \t%d\n&quot;, BufLen)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	//创建tcp连接，监听端口</span><br><span class="line">	tcpAddr, _ := net.ResolveTCPAddr(&quot;tcp&quot;, socket)</span><br><span class="line">	listen, err := net.ListenTCP(&quot;tcp&quot;, tcpAddr)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Printf(&quot;[ERROR] Listen err: %v\n&quot;, err)</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Printf(&quot;[server] Server listening %v\n&quot;, socket)</span><br><span class="line"></span><br><span class="line">	//调整写入缓存的长度</span><br><span class="line">	AjustBufLen()</span><br><span class="line"></span><br><span class="line">	//处理连接</span><br><span class="line">	for &#123;</span><br><span class="line"></span><br><span class="line">		con, err := listen.AcceptTCP()</span><br><span class="line">		if err != nil &#123;</span><br><span class="line">			fmt.Printf(&quot;[ERROR] Accept err: %v\n&quot;, err)</span><br><span class="line">			continue</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		//开启新协程，去处理客户端连接</span><br><span class="line">		go HandleConnection(con)</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>client</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;io/ioutil&quot;</span><br><span class="line">	&quot;net&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"></span><br><span class="line">	socket := &quot;:9066&quot;</span><br><span class="line"></span><br><span class="line">	tcpAddr, err := net.ResolveTCPAddr(&quot;tcp&quot;, socket)</span><br><span class="line">	conn, err := net.DialTCP(&quot;tcp&quot;, nil, tcpAddr)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Printf(&quot;[ERROR] Error connection : %v\n&quot;, err)</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">	defer conn.Close() //退出前关闭连接</span><br><span class="line"></span><br><span class="line">	//接收响应</span><br><span class="line">	var totalBytes int</span><br><span class="line">	var startTime = time.Now()</span><br><span class="line"></span><br><span class="line">	//修改读取缓冲区的大小</span><br><span class="line">	conn.SetReadBuffer(1)</span><br><span class="line"></span><br><span class="line">	//全部读取</span><br><span class="line">	bytes, err := ioutil.ReadAll(conn)</span><br><span class="line">	if err != nil &#123;</span><br><span class="line">		fmt.Printf(&quot;[ERROR] Error reading : %v\n&quot;, err)</span><br><span class="line">		return</span><br><span class="line">	&#125;</span><br><span class="line">	totalBytes = len(bytes)</span><br><span class="line"></span><br><span class="line">	cost := time.Now().Sub(startTime).Seconds()</span><br><span class="line"></span><br><span class="line">	fmt.Printf(&quot;[analysis]\nReceived\t%d\t\tbytes  \nEquals\t\t%d\tbits  \nTime Cost\t%v\ts  \nAverage Speed\t%v\t\tMB/s\n &quot;,</span><br><span class="line">		totalBytes, totalBytes*8, cost, fmt.Sprintf(&quot;%.2f&quot;, float64(totalBytes)/1024/1024/cost))</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://example.com/2022/09/24/golang%20socket%E7%BC%96%E7%A8%8B%E5%AD%A6%E4%B9%A0/" title="Go socket编程学习" target="_blank" rel="external">http://example.com/2022/09/24/golang socket编程学习/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/arczhi" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/arczhi" target="_blank"><span class="text-dark">ARCZHI</span><small class="ml-1x">Student &amp; Coder</small></a></h3>
+        <div>一位梦想 do something out of nothing 的 coder</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+           
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/2022/09/15/jwt%E5%BA%94%E7%94%A8%E5%AE%9E%E8%B7%B5/" title="Go jwt应用实践"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/arczhi" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/null" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="/null" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="/null" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+   
+    
+  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+  <script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '25431034106d6efd1f88',
+    clientSecret: '09122f75e471057bce0be35022db32dea81c7740',
+    repo: 'arczhi.github.io',
+    owner: 'arczhi',
+    admin: ['arczhi'],
+    id: md5(location.pathname),
+    distractionFreeMode: true,
+    language: 'zh-CN',
+    enableHotKey: 'true'
+  })
+  gitalk.render('comments')
+  </script>
+      
+
+
+
+
+
+
+
+</body>
+</html>
