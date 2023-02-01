@@ -17,13 +17,13 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>实时聊天的设计与实现 | ARCZHI&#39;s Blog</title>
-  <meta name="description" content="注：本文的相关设计与实现未经过实际生产的验证，仅为作者的探索与实践。   代码仓库： https:&#x2F;&#x2F;github.com&#x2F;arczhi&#x2F;EasyChat demo地址： http:&#x2F;&#x2F;touchcloud.top:9999  缘起前段时间在知乎上面刷帖子的时候，偶然看到了websocket这个支持长连接、全双工的协议，它相比短连接、单向的http协议，在某些业务场景下的适用性会更好。比如客户端">
+  <title>实时聊天功能的设计与实现 | ARCZHI&#39;s Blog</title>
+  <meta name="description" content="注：本文的相关设计与实现未经过实际生产环境的验证，仅为作者的探索与实践。   代码仓库： https:&#x2F;&#x2F;github.com&#x2F;arczhi&#x2F;EasyChat demo地址： http:&#x2F;&#x2F;touchcloud.top:9999  缘起前段时间在知乎上面刷帖子的时候，偶然看到了websocket这个支持长连接、全双工的协议，它相比短连接、单向的http协议，在某些业务场景下的适用性会更好。比如客">
 <meta property="og:type" content="article">
-<meta property="og:title" content="实时聊天的设计与实现">
+<meta property="og:title" content="实时聊天功能的设计与实现">
 <meta property="og:url" content="http://example.com/2023/01/27/%E5%AE%9E%E6%97%B6%E8%81%8A%E5%A4%A9%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="注：本文的相关设计与实现未经过实际生产的验证，仅为作者的探索与实践。   代码仓库： https:&#x2F;&#x2F;github.com&#x2F;arczhi&#x2F;EasyChat demo地址： http:&#x2F;&#x2F;touchcloud.top:9999  缘起前段时间在知乎上面刷帖子的时候，偶然看到了websocket这个支持长连接、全双工的协议，它相比短连接、单向的http协议，在某些业务场景下的适用性会更好。比如客户端">
+<meta property="og:description" content="注：本文的相关设计与实现未经过实际生产环境的验证，仅为作者的探索与实践。   代码仓库： https:&#x2F;&#x2F;github.com&#x2F;arczhi&#x2F;EasyChat demo地址： http:&#x2F;&#x2F;touchcloud.top:9999  缘起前段时间在知乎上面刷帖子的时候，偶然看到了websocket这个支持长连接、全双工的协议，它相比短连接、单向的http协议，在某些业务场景下的适用性会更好。比如客">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://blog-1308266995.cos.ap-guangzhou.myqcloud.com/%E5%8D%9A%E5%AE%A2%E5%9B%BE%E7%89%87/%E8%81%8A%E5%A4%A9%E5%AE%A4.png">
 <meta property="og:image" content="https://blog-1308266995.cos.ap-guangzhou.myqcloud.com/%E5%8D%9A%E5%AE%A2%E5%9B%BE%E7%89%87/%E8%81%8A%E5%A4%A9%E5%AF%B9%E8%AF%9D.png">
@@ -31,7 +31,7 @@
 <meta property="og:image" content="https://blog-1308266995.cos.ap-guangzhou.myqcloud.com/%E5%8D%9A%E5%AE%A2%E5%9B%BE%E7%89%87/websocket.png">
 <meta property="og:image" content="https://blog-1308266995.cos.ap-guangzhou.myqcloud.com/%E5%8D%9A%E5%AE%A2%E5%9B%BE%E7%89%87/cookie%E5%B1%9E%E6%80%A7.png">
 <meta property="article:published_time" content="2023-01-27T05:31:24.796Z">
-<meta property="article:modified_time" content="2023-01-29T03:40:23.304Z">
+<meta property="article:modified_time" content="2023-02-01T04:49:22.769Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://blog-1308266995.cos.ap-guangzhou.myqcloud.com/%E5%8D%9A%E5%AE%A2%E5%9B%BE%E7%89%87/%E8%81%8A%E5%A4%A9%E5%AE%A4.png">
@@ -244,7 +244,7 @@
                 <a class="category-link" href="/categories/%E5%89%8D%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/">前后端开发</a>
               </p>
               <p class="item-title">
-                <a href="/2023/01/27/%E5%AE%9E%E6%97%B6%E8%81%8A%E5%A4%A9%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/" class="title">实时聊天的设计与实现</a>
+                <a href="/2023/01/27/%E5%AE%9E%E6%97%B6%E8%81%8A%E5%A4%A9%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/" class="title">实时聊天功能的设计与实现</a>
               </p>
               <p class="item-date">
                 <time datetime="2023-01-27T05:31:24.796Z" itemprop="datePublished">2023-01-27</time>
@@ -332,7 +332,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      实时聊天的设计与实现
+      实时聊天功能的设计与实现
     </h1>
   
 
@@ -368,7 +368,7 @@
     <div class="article-entry marked-body" itemprop="articleBody">
       
         <blockquote>
-<p>注：本文的相关设计与实现未经过实际生产的验证，仅为作者的探索与实践。</p>
+<p>注：本文的相关设计与实现未经过实际生产环境的验证，仅为作者的探索与实践。</p>
 </blockquote>
 <blockquote>
 <p>代码仓库：</p>
@@ -442,7 +442,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="http://example.com/2023/01/27/%E5%AE%9E%E6%97%B6%E8%81%8A%E5%A4%A9%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/" title="实时聊天的设计与实现" target="_blank" rel="external">http://example.com/2023/01/27/实时聊天的设计与实现/</a>
+      <a href="http://example.com/2023/01/27/%E5%AE%9E%E6%97%B6%E8%81%8A%E5%A4%A9%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/" title="实时聊天功能的设计与实现" target="_blank" rel="external">http://example.com/2023/01/27/实时聊天的设计与实现/</a>
     </li>
     
     <li class="post-copyright-license">
