@@ -17,28 +17,16 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>在alpine容器中部署Go应用的时区问题 | ARCZHI&#39;s Blog</title>
-  <meta name="description" content="初步配置 一开始，参考了这篇博客，使用dockerfile在构建镜像的时候，对alpine内的时区进行修改。启动容器后，进入容器并执行date命令，发现时间确实被调整为了CST时间（北美中部标准时间）。 alpine 镜像时区调为 Asia&#x2F;Shanghai 后因 TZ 与 apk del tzdata 导致不生效 - 水郁 - 博客园 (cnblogs.com) 但当我使用了如下Go程">
-<meta property="og:type" content="article">
-<meta property="og:title" content="在alpine容器中部署Go应用的时区问题">
-<meta property="og:url" content="http://example.com/2023/07/10/%E5%9C%A8alpine%E5%AE%B9%E5%99%A8%E4%B8%AD%E9%83%A8%E7%BD%B2Go%E5%BA%94%E7%94%A8%E7%9A%84%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98/index.html">
+  <title>Category: devops | ARCZHI&#39;s Blog</title>
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/categories/Docker/devops/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="初步配置 一开始，参考了这篇博客，使用dockerfile在构建镜像的时候，对alpine内的时区进行修改。启动容器后，进入容器并执行date命令，发现时间确实被调整为了CST时间（北美中部标准时间）。 alpine 镜像时区调为 Asia&#x2F;Shanghai 后因 TZ 与 apk del tzdata 导致不生效 - 水郁 - 博客园 (cnblogs.com) 但当我使用了如下Go程">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://blog-1308266995.cos.ap-guangzhou.myqcloud.com/%E5%8D%9A%E5%AE%A2%E5%9B%BE%E7%89%87/046d123f2440afc3acb17ce626c0df6.png">
-<meta property="og:image" content="https://blog-1308266995.cos.ap-guangzhou.myqcloud.com/%E5%8D%9A%E5%AE%A2%E5%9B%BE%E7%89%87/f689692e3e34a117295cc6354b35461.png">
-<meta property="og:image" content="https://blog-1308266995.cos.ap-guangzhou.myqcloud.com/%E5%8D%9A%E5%AE%A2%E5%9B%BE%E7%89%87/96315e31286c270f3b7ac153850d535.png">
-<meta property="og:image" content="https://blog-1308266995.cos.ap-guangzhou.myqcloud.com/%E5%8D%9A%E5%AE%A2%E5%9B%BE%E7%89%87/4d032d476ae25c6325ff8897e3aef24.png">
-<meta property="og:image" content="https://blog-1308266995.cos.ap-guangzhou.myqcloud.com/%E5%8D%9A%E5%AE%A2%E5%9B%BE%E7%89%87/a7f517fbc6d78371e0c8bd518a7e843.png">
-<meta property="article:published_time" content="2023-07-10T08:44:07.814Z">
-<meta property="article:modified_time" content="2023-07-10T10:04:36.265Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="Docker">
-<meta property="article:tag" content="Go">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://blog-1308266995.cos.ap-guangzhou.myqcloud.com/%E5%8D%9A%E5%AE%A2%E5%9B%BE%E7%89%87/046d123f2440afc3acb17ce626c0df6.png">
   <!-- Canonical links -->
-  <link rel="canonical" href="http://example.com/2023/07/10/%E5%9C%A8alpine%E5%AE%B9%E5%99%A8%E4%B8%AD%E9%83%A8%E7%BD%B2Go%E5%BA%94%E7%94%A8%E7%9A%84%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98/index.html">
+  <link rel="canonical" href="http://example.com/categories/Docker/devops/index.html">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -324,159 +312,63 @@
 </aside>
 
   
-  
-<main class="main" role="main">
-  <div class="content">
-  <article id="post-在alpine容器中部署Go应用的时区问题" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
-    
-    <div class="article-header">
-      
-        
-  
-    <h1 class="article-title" itemprop="name">
-      在alpine容器中部署Go应用的时区问题
-    </h1>
-  
-
-      
-      <div class="article-meta">
-        <span class="article-date">
-    <i class="icon icon-calendar-check"></i>
-	<a href="/2023/07/10/%E5%9C%A8alpine%E5%AE%B9%E5%99%A8%E4%B8%AD%E9%83%A8%E7%BD%B2Go%E5%BA%94%E7%94%A8%E7%9A%84%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98/" class="article-date">
-	  <time datetime="2023-07-10T08:44:07.814Z" itemprop="datePublished">2023-07-10</time>
-	</a>
-</span>
-        
-  <span class="article-category">
-    <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/%E9%83%A8%E7%BD%B2/">部署</a>
-  </span>
-
-        
-  <span class="article-tag">
-    <i class="icon icon-tags"></i>
-	<a class="article-tag-link-link" href="/tags/Docker/" rel="tag">Docker</a>, <a class="article-tag-link-link" href="/tags/Go/" rel="tag">Go</a>
-  </span>
-
-
-        
-	<span class="article-read hidden-xs">
-	    <i class="icon icon-eye-fill" aria-hidden="true"></i>
-	    <span id="busuanzi_container_page_pv">
-			<span id="busuanzi_value_page_pv">0</span>
-		</span>
-	</span>
-
-
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2023/07/10/%E5%9C%A8alpine%E5%AE%B9%E5%99%A8%E4%B8%AD%E9%83%A8%E7%BD%B2Go%E5%BA%94%E7%94%A8%E7%9A%84%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98/#comments" class="article-comment-link">Comments</a></span>
-        
-      </div>
+  <main class="main" role="main">
+  <article class="content article article-categories article-type-list" itemscope="">
+    <header class="article-header">
+      <h1 itemprop="name" class="hidden-xs">Category: devops</h1>
+      <p class="hidden-xs">Total 1 articles</p>
+      <nav role="navigation" id="nav-main" class="okayNav">
+        <ul>
+          <li><a href="/categories">All</a></li>
+          
+          <li><a href="/categories/Docker/">Docker</a></li>
+          
+          <li><a href="/categories/测试部署/">测试部署</a></li>
+          
+          <li><a href="/categories/网络安全/">网络安全</a></li>
+          
+          <li><a href="/categories/前后端开发/">前后端开发</a></li>
+          
+          <li><a href="/categories/后端开发/">后端开发</a></li>
+          
+          <li><a href="/categories/部署/">部署</a></li>
+          
+          <li><a href="/categories/Docker/devops/">devops</a></li>
+          
+        </ul>
+      </nav>
+    </header>
+    <!-- /header -->
+    <div class="article-body">
+      <div class="panel panel-default b-no">
+    <div class="panel-heading" role="tab">
+        <h4 class="panel-title">
+            <a data-toggle="collapse" href="#collapsedevops" aria-expanded="true">
+              <i class="icon icon-folder text-active"></i><i class="icon icon-folder-open text"></i>
+              devops
+            </a>
+            <small class="text-muted">(Total 1 articles)</small>
+        </h4>
     </div>
-    <div class="article-entry marked-body" itemprop="articleBody">
-      
-        <h4 id="初步配置"><a href="#初步配置" class="headerlink" title="初步配置"></a>初步配置</h4><hr>
-<p>一开始，参考了这篇博客，使用dockerfile在构建镜像的时候，对alpine内的时区进行修改。启动容器后，进入容器并执行date命令，发现时间确实被调整为了CST时间（北美中部标准时间）。</p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/flipped/p/15808681.html">alpine 镜像时区调为 Asia&#x2F;Shanghai 后因 TZ 与 apk del tzdata 导致不生效 - 水郁 - 博客园 (cnblogs.com)</a></p>
-<p>但当我使用了如下Go程序进行测试的时候，却发现，打印出来的时间仍为UTC时间。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">	&quot;fmt&quot;</span><br><span class="line">	&quot;time&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line">	now := time.Now()</span><br><span class="line">	fmt.Printf(&quot;时间测试\n时间 %v\n当前时区%v\n&quot;, now, now.Location())</span><br><span class="line">	for &#123;</span><br><span class="line">		time.Sleep(10 * time.Second)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><img src="https://blog-1308266995.cos.ap-guangzhou.myqcloud.com/%E5%8D%9A%E5%AE%A2%E5%9B%BE%E7%89%87/046d123f2440afc3acb17ce626c0df6.png"></p>
-<p><img src="https://blog-1308266995.cos.ap-guangzhou.myqcloud.com/%E5%8D%9A%E5%AE%A2%E5%9B%BE%E7%89%87/f689692e3e34a117295cc6354b35461.png"></p>
-<p><img src="https://blog-1308266995.cos.ap-guangzhou.myqcloud.com/%E5%8D%9A%E5%AE%A2%E5%9B%BE%E7%89%87/96315e31286c270f3b7ac153850d535.png"></p>
-<p>非常地纳闷，明明容器内的时区已经被修改好了，为什么go程序的时区还是不准确？</p>
-<p>百度了一下，发现go默认使用UTC时间，如果希望自定义时区，可以通过time.LoadLocation()方法，在代码层面进行调整。但如果采用该方案，则需要修改大量的业务代码，而且如果第三方依赖库中存在time.Now()等方法的调用，同样会出现这样的时区错误，且没有办法通过Loc()方法去设置时区。</p>
-<p>所以真的没办法在容器层面解决这个问题吗？</p>
-<p>不得不感谢互联网，还是有办法的。</p>
-<h4 id="究其根本"><a href="#究其根本" class="headerlink" title="究其根本"></a>究其根本</h4><hr>
-<p>问题的核心，其实是go运行时能否准确定位到当前容器内的时区。经过翻阅资料，找到了这样一篇博客。</p>
-<p>[容器化Go应用–基础镜像的未知时区问题 (zhihu.com)](<a target="_blank" rel="noopener" href="https://www.zhihu.com/tardis/zm/art/161462869#:~:text=%E5%A6%82%E6%9E%9C%E4%BD%A0%E7%9A%84%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E5%9C%A8%E5%88%9D%E5%A7%8B%E5%8C%96%E5%87%BD%E6%95%B0">https://www.zhihu.com/tardis/zm/art/161462869#:~:text=如果你的应用程序在初始化函数</a> init 里有设置时区的操作，那么在启动应用容器时会遇到下面这个运行时 panic ： unknown time,zone Asia%2FShanghai 如果你在应用程序里不显示地设置时区，应用容器确实是能正常启动的，只不过这样 time 包里的函数统一用的是 UTC 时区，等你发现问题时再在程序里去显示设置时区仍然会遇到上面的运行时错误。)</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">在Linux系统下Go运行时会从多个来源读取时区信息，在$GOROOT/src/time/zoneinfo.unix文件里能够找到Go运行时是从哪些地方读取时区信息的。</span><br><span class="line"></span><br><span class="line">// Many systems use /usr/share/zoneinfo, Solaris 2 has</span><br><span class="line">// /usr/share/lib/zoneinfo, IRIX 6 has /usr/lib/locale/TZ.</span><br><span class="line">var zoneSources = []string&#123;</span><br><span class="line">   &quot;/usr/share/zoneinfo/&quot;,</span><br><span class="line">   &quot;/usr/share/lib/zoneinfo/&quot;,</span><br><span class="line">   &quot;/usr/lib/locale/TZ/&quot;,</span><br><span class="line">   runtime.GOROOT() + &quot;/lib/time/zoneinfo.zip&quot;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    <div id="collapsedevops" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingdevops">
+        <div class="panel-body">
+            <div class="collection">
+              
+                
+<a href="/2023/07/26/%E9%A1%B9%E7%9B%AE%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0%E4%B8%8ECICD%E5%AE%9E%E8%B7%B5/" class="collection-item"   itemprop="url">
+  <time datetime="2023-07-26T07:29:33.765Z" itemprop="datePublished">2023-07-26</time>
+  <span>&nbsp;&nbsp;&nbsp;</span> 项目容器化改造与devops实践
+</a>
 
 
-
-<p>所以我只需要在docker-compose.yml中，将宿主机的&#x2F;usr&#x2F;share&#x2F;zoneinfo&#x2F;目录挂载进容器即可。</p>
-<p><img src="https://blog-1308266995.cos.ap-guangzhou.myqcloud.com/%E5%8D%9A%E5%AE%A2%E5%9B%BE%E7%89%87/4d032d476ae25c6325ff8897e3aef24.png"></p>
-<p><img src="https://blog-1308266995.cos.ap-guangzhou.myqcloud.com/%E5%8D%9A%E5%AE%A2%E5%9B%BE%E7%89%87/a7f517fbc6d78371e0c8bd518a7e843.png"></p>
-<p>至此，成功打印出符合当前时区的时间戳。</p>
-
-      
+              
+            </div>
+        </div>
     </div>
-    <div class="article-footer">
-      <blockquote class="mt-2x">
-  <ul class="post-copyright list-unstyled">
-    
-    <li class="post-copyright-link hidden-xs">
-      <strong>本文链接：</strong>
-      <a href="http://example.com/2023/07/10/%E5%9C%A8alpine%E5%AE%B9%E5%99%A8%E4%B8%AD%E9%83%A8%E7%BD%B2Go%E5%BA%94%E7%94%A8%E7%9A%84%E6%97%B6%E5%8C%BA%E9%97%AE%E9%A2%98/" title="在alpine容器中部署Go应用的时区问题" target="_blank" rel="external">http://example.com/2023/07/10/在alpine容器中部署Go应用的时区问题/</a>
-    </li>
-    
-    <li class="post-copyright-license">
-      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
-    </li>
-  </ul>
-</blockquote>
-
-
-<div class="panel panel-default panel-badger">
-  <div class="panel-body">
-    <figure class="media">
-      <div class="media-left">
-        <a href="https://github.com/arczhi" target="_blank" class="img-burn thumb-sm visible-lg">
-          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
-        </a>
-      </div>
-      <div class="media-body">
-        <h3 class="media-heading"><a href="https://github.com/arczhi" target="_blank"><span class="text-dark">ARCZHI</span><small class="ml-1x">Student &amp; Coder</small></a></h3>
-        <div>一位梦想 do something out of nothing 的 coder</div>
-      </div>
-    </figure>
-  </div>
 </div>
-
-
     </div>
   </article>
-  
-    
-  <section id="comments">
-  	
-           
-    
-  </section>
-
-
-  
-</div>
-
-  <nav class="bar bar-footer clearfix" data-stick-bottom>
-  <div class="bar-inner">
-  
-  <ul class="pager pull-left">
-    
-    <li class="prev">
-      <a href="/2023/07/26/%E9%A1%B9%E7%9B%AE%E5%AE%B9%E5%99%A8%E5%8C%96%E6%94%B9%E9%80%A0%E4%B8%8ECICD%E5%AE%9E%E8%B7%B5/" title="项目容器化改造与devops实践"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
-    </li>
-    
-    
-    <li class="next">
-      <a href="/2023/01/27/%E5%AE%9E%E6%97%B6%E8%81%8A%E5%A4%A9%E7%9A%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E5%AE%9E%E7%8E%B0/" title="基于websocket的实时聊天功能设计与实现"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
-    </li>
-    
-    
-  </ul>
-  
-  
-  
-  <div class="bar-right">
-    
-    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
-    
-  </div>
-  </div>
-</nav>
-  
-
-
+   
 </main>
 
   <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
@@ -537,34 +429,6 @@ window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
 
 
 
-
-   
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
-
-
-
-
-   
-    
-  <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css"> -->
-  <script src="//cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js"></script>
-  <script src="//cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
-  <script type="text/javascript">
-  var gitalk = new Gitalk({
-    clientID: '25431034106d6efd1f88',
-    clientSecret: '09122f75e471057bce0be35022db32dea81c7740',
-    repo: 'arczhi.github.io',
-    owner: 'arczhi',
-    admin: ['arczhi'],
-    id: md5(location.pathname),
-    distractionFreeMode: true,
-    language: 'zh-CN',
-    enableHotKey: 'true'
-  })
-  gitalk.render('comments')
-  </script>
-      
 
 
 
